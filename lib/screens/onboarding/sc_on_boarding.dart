@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sixpicker/mvvm/view_model/vm_local.dart';
@@ -20,6 +21,7 @@ class _OnBoardingState extends ConsumerState<OnBoarding> {
     // TODO: implement initState
     super.initState();
     ref.read(vmLocal.notifier).locationPermissionCheck(context);
+    FlutterNativeSplash.remove();
   }
   @override
   Widget build(BuildContext context) {
