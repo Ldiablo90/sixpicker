@@ -47,9 +47,28 @@ class _PickerState extends ConsumerState<Picker> {
             ),
             const Spacer(flex: 2),
             Row(children: [Text("Seed : ${ref.watch(vmPicker).seed}", style: const TextStyle(fontSize: 18),)]),
+            if(ref.watch(vmPicker).pickType > 2)
             Row(children: [Text("Location : ${ref.watch(vmLocal).latitude} /  ${ref.watch(vmLocal).longitude}", style: const TextStyle(fontSize: 18),)]),
             const Spacer(flex: 2),
             Row(mainAxisAlignment: MainAxisAlignment.end, children: [Text("make : ${ref.watch(vmPicker).ymd}")]),
+            Row(
+              children: [
+                Text("Type : ${ref.watch(vmPicker).seed}", style: const TextStyle(fontSize: 18)),
+                Expanded(
+                  child: DropdownButtonHideUnderline(child: DropdownButton(
+                      value: ref.watch(vmPicker).pickType,
+                      alignment: AlignmentDirectional.topStart,
+                      dropdownColor: Colors.grey.shade200,
+                      items: const [
+                        DropdownMenuItem(value: 0, child: Text("")),
+                        DropdownMenuItem(value: 1, child: Text("Seed")),
+                        DropdownMenuItem(value: 2, child: Text("Seed + Time")),
+                        DropdownMenuItem(value: 3, child: Text("Seed + Location")),
+                        DropdownMenuItem(value: 4, child: Text("Seed + Time + Location")),
+                  ], onChanged: ref.read(vmPicker.notifier).setPickType)),
+                ),
+              ],
+            ),
             const Spacer(flex: 2),
             Row(
               children: [
@@ -61,7 +80,7 @@ class _PickerState extends ConsumerState<Picker> {
                 const Spacer(),
                 ButtonFit(
                   flex: 5,
-                  onTap: (){ref.read(vmPicker.notifier).setPickData();},
+                  onTap: (){ref.read(vmPicker.notifier).setPickData(context);},
                   child: _buttonBox("Pick Data"),
                 ),
               ],
@@ -87,7 +106,7 @@ class _PickerState extends ConsumerState<Picker> {
             Row(
               children: [
                 ButtonFit(
-                  onTap: (){context.pushReplacement(PathBill.path);},
+                  onTap: (){context.push(PathBill.path);},
                   child: _buttonBox("Bill View"),
                 ),
               ],
@@ -103,7 +122,7 @@ class _PickerState extends ConsumerState<Picker> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(99),
-        color: Colors.greenAccent,
+        color: Colors.grey.shade200,
         boxShadow: const [BoxShadow(color: Colors.grey,offset: Offset(.5, 1),blurRadius: 3)]
       ),
       padding: const EdgeInsets.symmetric(vertical: 5),

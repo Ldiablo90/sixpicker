@@ -18,6 +18,8 @@ class ViewModelPicker extends Notifier<ModelPicker> {
 
   void initPickData() {ref.read(vmBill.notifier).setPage(0);state = ModelPicker();}
 
+  void setPickType(int? index) => state = ModelPicker(seed: state.seed,pickType: index??0, pickData: state.pickData,ymd: state.ymd);
+
   void setSeed(BuildContext context, {required String seed}) {
     ref.read(vmBill.notifier).setPage(0);
     FocusManager.instance.primaryFocus?.unfocus();
@@ -25,8 +27,12 @@ class ViewModelPicker extends Notifier<ModelPicker> {
     state = ModelPicker(seed: seed);
   }
 
-  void setPickData() async {
+  void setPickData(BuildContext context) async {
     ref.read(vmBill.notifier).setPage(1);
+    if(state.pickType == 0) {
+      ref.read(vmLocal.notifier).showSnackbar(context, title: "Please choose the type");
+      return;
+    }
     List<int> numbers = List.generate(45, (index) => index + 1);
     bool isLocationServiceEnabled  = await Geolocator.isLocationServiceEnabled();
     int locationNum = 0;
@@ -40,6 +46,9 @@ class ViewModelPicker extends Notifier<ModelPicker> {
         locationNum += int.parse(position.longitude.toString().replaceAll(".", ""));
       }catch(e){}
     }
+    if(state.pickType == 1) {time = 0;locationNum = 0;}
+    else if(state.pickType == 2) {locationNum = 0;}
+    else if(state.pickType == 3) {time = 0;}
     Random random = Random((int.tryParse(state.seed)??0)+time+locationNum);
     final List<List<int>> pickLists = [];
     while (pickLists.length < 5) {
@@ -47,7 +56,7 @@ class ViewModelPicker extends Notifier<ModelPicker> {
       final pickData = numbers.take(6).toList()..sort();
       pickLists.add(pickData);
     }
-    state = ModelPicker(seed: state.seed, pickData: pickLists, ymd: DateTimeFormat.format(DateTime.now(), format: "Y-m-d H:i:s"));
+    state = ModelPicker(seed: state.seed, pickType: state.pickType, pickData: pickLists, ymd: DateTimeFormat.format(DateTime.now(), format: "Y-m-d H:i:s"));
   }
 
   @override

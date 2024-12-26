@@ -56,6 +56,9 @@ dev_dependencies:
   build_runner: ^2.3.3
   json_serializable: ^6.9.0
 
+  flutter_oss_licenses: ^3.0.4
+  # dart run flutter_oss_licenses:generate  오픈소스 파일 만들기
+
   flutter_test:
     sdk: flutter
 

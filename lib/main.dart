@@ -24,7 +24,11 @@ class SixPicker extends ConsumerWidget {
     final router = ref.read(baseRouterProvider);
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(textTheme: GoogleFonts.eduVicWaNtBeginnerTextTheme()),
+      theme: ThemeData(
+        scaffoldBackgroundColor: Colors.white,
+        appBarTheme: const AppBarTheme(backgroundColor: Colors.white,surfaceTintColor: Colors.white),
+        textTheme: GoogleFonts.eduVicWaNtBeginnerTextTheme(),
+      ),
       routerConfig: router,
     );
   }
