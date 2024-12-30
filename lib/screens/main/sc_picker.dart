@@ -6,8 +6,10 @@ import 'package:sixpicker/mvvm/view_model/vm_local.dart';
 import 'package:sixpicker/mvvm/view_model/vm_picker.dart';
 import 'package:sixpicker/router/route_path.dart';
 import 'package:sixpicker/screens/main/widget/w_pick_ball.dart';
+import 'package:sixpicker/screens/public/widget/w_button_box.dart';
 import 'package:sixpicker/screens/public/widget/w_button_fit.dart';
 import 'package:sixpicker/screens/public/widget/w_scaffold.dart';
+import 'package:sixpicker/utils/u_size.dart';
 
 class Picker extends ConsumerStatefulWidget {
   const Picker({super.key});
@@ -20,12 +22,27 @@ class _PickerState extends ConsumerState<Picker> {
   TextEditingController controller = TextEditingController();
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if(ref.read(vmLocal).isFirst) ref.read(vmPicker.notifier).showHelp(context);
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){FocusManager.instance.primaryFocus?.unfocus();},
       child: BaseScaffold(
         child: Column(
           children: [
+            Row(
+              children: [
+                const Spacer(flex: 10),
+                ButtonFit(onTap: (){ref.read(vmPicker.notifier).showHelp(context);}, child: const Icon(Icons.info_outline))
+              ],),
+            const Spacer(flex: 1),
             Row(
               children: [
                 Expanded(
@@ -39,32 +56,32 @@ class _PickerState extends ConsumerState<Picker> {
                   ),
                 ),
                 const Spacer(flex: 1),
-                ElevatedButton(
-                  onPressed: () {ref.read(vmPicker.notifier).setSeed(context, seed: controller.text);},
-                  child: Text("Set Seed"),
+                ButtonFit(
+                  flex: 5,
+                  onTap: () {ref.read(vmPicker.notifier).setSeed(context, seed: controller.text);},
+                  child: const ButtonBox("Set Code"),
                 ),
               ],
             ),
             const Spacer(flex: 2),
-            Row(children: [Text("Seed : ${ref.watch(vmPicker).seed}", style: const TextStyle(fontSize: 18),)]),
+            Row(children: [Text("Picker Code : ${ref.watch(vmPicker).seed}", style: const TextStyle(fontSize: 18),)]),
             if(ref.watch(vmPicker).pickType > 2)
             Row(children: [Text("Location : ${ref.watch(vmLocal).latitude} /  ${ref.watch(vmLocal).longitude}", style: const TextStyle(fontSize: 18),)]),
             const Spacer(flex: 2),
             Row(mainAxisAlignment: MainAxisAlignment.end, children: [Text("make : ${ref.watch(vmPicker).ymd}")]),
             Row(
               children: [
-                Text("Type : ${ref.watch(vmPicker).seed}", style: const TextStyle(fontSize: 18)),
+                const Text("Type : ", style: TextStyle(fontSize: 18)),
                 Expanded(
                   child: DropdownButtonHideUnderline(child: DropdownButton(
                       value: ref.watch(vmPicker).pickType,
                       alignment: AlignmentDirectional.topStart,
-                      dropdownColor: Colors.grey.shade200,
+                      dropdownColor: Colors.transparent,
                       items: const [
-                        DropdownMenuItem(value: 0, child: Text("")),
-                        DropdownMenuItem(value: 1, child: Text("Seed")),
-                        DropdownMenuItem(value: 2, child: Text("Seed + Time")),
-                        DropdownMenuItem(value: 3, child: Text("Seed + Location")),
-                        DropdownMenuItem(value: 4, child: Text("Seed + Time + Location")),
+                        DropdownMenuItem(value: 1, child: Text("Seed", style: TextStyle(color: Colors.white, shadows: [Shadow(blurRadius: 5,offset: Offset(1, 1),color: Colors.grey)]))),
+                        DropdownMenuItem(value: 2, child: Text("Seed + Time", style: TextStyle(color: Colors.white, shadows: [Shadow(blurRadius: 5,offset: Offset(1, 1),color: Colors.grey)]))),
+                        DropdownMenuItem(value: 3, child: Text("Seed + Location", style: TextStyle(color: Colors.white, shadows: [Shadow(blurRadius: 5,offset: Offset(1, 1),color: Colors.grey)]))),
+                        DropdownMenuItem(value: 4, child: Text("Seed + Time + Location", style: TextStyle(color: Colors.white, shadows: [Shadow(blurRadius: 5,offset: Offset(1, 1),color: Colors.grey)]))),
                   ], onChanged: ref.read(vmPicker.notifier).setPickType)),
                 ),
               ],
@@ -75,39 +92,47 @@ class _PickerState extends ConsumerState<Picker> {
                 ButtonFit(
                   flex: 5,
                   onTap: (){ref.read(vmPicker.notifier).initPickData();},
-                  child: _buttonBox("Data Reset"),
+                  child: const ButtonBox("Data Reset"),
                 ),
                 const Spacer(),
                 ButtonFit(
                   flex: 5,
                   onTap: (){ref.read(vmPicker.notifier).setPickData(context);},
-                  child: _buttonBox("Pick Data"),
+                  child: const ButtonBox("Pick Data"),
                 ),
               ],
             ),
             const Spacer(flex: 3),
-            Wrap(
-              runSpacing: 10,
-              children: ref.watch(vmPicker).pickData.map(
-                    (pickData) => Row(
-                  children: pickData
-                      .map(
-                        (data) => Expanded(
-                      child: Center(
-                        child: PickBall(pick: data),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black26,width: 5),
+                borderRadius: BorderRadius.circular(BaseSize.baseRound),
+              ),
+              padding: EdgeInsets.all(BaseSize.basePaddingFit),
+              child: Wrap(
+                runSpacing: 10,
+                children: ref.watch(vmPicker).pickData.map(
+                      (pickData) => Row(
+                    children: pickData
+                        .map(
+                          (data) => Expanded(
+                        child: Center(
+                          child: PickBall(pick: data),
+                        ),
                       ),
-                    ),
-                  )
-                      .toList(),
-                ),
-              ).toList(),
+                    )
+                        .toList(),
+                  ),
+                ).toList(),
+              ),
             ),
             const Spacer(flex: 3),
             Row(
               children: [
                 ButtonFit(
                   onTap: (){context.push(PathBill.path);},
-                  child: _buttonBox("Bill View"),
+                  child: const ButtonBox("Bill View"),
                 ),
               ],
             ),
@@ -118,17 +143,4 @@ class _PickerState extends ConsumerState<Picker> {
     );
   }
 
-  Widget _buttonBox(String text){
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(99),
-        color: Colors.grey.shade200,
-        boxShadow: const [BoxShadow(color: Colors.grey,offset: Offset(.5, 1),blurRadius: 3)]
-      ),
-      padding: const EdgeInsets.symmetric(vertical: 5),
-      child: Center(
-        child:  Text(text),
-      ),
-    );
-  }
 }

@@ -1,18 +1,20 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:sixpicker/mvvm/model/m_local.dart';
-import 'package:sixpicker/mvvm/model/m_picker.dart';
+import 'package:sixpicker/mvvm/repository/sp_local.dart';
 
 class ViewModelLocal extends Notifier<ModelLocal>{
 
+  final LocalSharedPreferences _sharedPreferences;
+
+  ViewModelLocal(this._sharedPreferences);
+
   void setLocation(Position? position){
-    ModelLocal editModel = ModelLocal(latitude: position?.latitude??0, longitude: position?.longitude??0);
+    ModelLocal editModel = ModelLocal(isFirst: state.isFirst, latitude: position?.latitude??0, longitude: position?.longitude??0);
     state = editModel;
   }
-  void showSnackbar(BuildContext context, {required String title, Color bg = Colors.brown}){
+  void showSnackbar(BuildContext context, {required String title, Color bg = Colors.black54}){
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(title),
       behavior: SnackBarBehavior.floating,
@@ -37,11 +39,16 @@ class ViewModelLocal extends Notifier<ModelLocal>{
     }
   }
 
+  void setIsFirst(){
+    _sharedPreferences.setIsFirst(false);
+    state = ModelLocal(isFirst: false);
+  }
+
   @override
   ModelLocal build() {
     // TODO: implement build
-    return ModelLocal();
+    return ModelLocal(isFirst: _sharedPreferences.getIsFirst());
   }
 }
 
-final vmLocal = NotifierProvider<ViewModelLocal, ModelLocal>(ViewModelLocal.new);
+final vmLocal = NotifierProvider<ViewModelLocal, ModelLocal>(() => throw UnimplementedError());

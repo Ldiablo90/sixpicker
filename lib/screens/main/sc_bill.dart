@@ -6,6 +6,8 @@ import 'package:sixpicker/mvvm/view_model/vm_picker.dart';
 import 'package:sixpicker/router/route_path.dart';
 import 'package:sixpicker/router/router.dart';
 import 'package:sixpicker/screens/main/widget/w_bill_page.dart';
+import 'package:sixpicker/screens/public/widget/w_button_box.dart';
+import 'package:sixpicker/screens/public/widget/w_button_fit.dart';
 import 'package:sixpicker/screens/public/widget/w_scaffold.dart';
 
 class Bill extends ConsumerStatefulWidget {
@@ -38,16 +40,17 @@ class _BillState extends ConsumerState<Bill> with TickerProviderStateMixin {
                   "${ref.watch(vmBill)} / ${ref.watch(vmPicker).pickData.length}"),
             ],
           ),
+          const Spacer(flex: 1),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [ElevatedButton(onPressed: (){context.pushReplacement(PathPicker.path);}, child: const Text("To modify a number"))],
+            children: [ButtonFit(onTap: (){context.pushReplacement(PathPicker.path);}, child: const ButtonBox("To modify a number"))],
           ),
           const Spacer(flex: 1),
           Expanded(
-            flex: 20,
+            flex: 15,
             child: ref.watch(vmPicker).pickData.isNotEmpty
                 ? TabBarView(
                     controller: controller,
+                    viewportFraction: .9,
                     children: ref
                         .watch(vmPicker)
                         .pickData

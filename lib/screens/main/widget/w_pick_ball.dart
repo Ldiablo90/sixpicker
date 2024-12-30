@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 
 class PickBall extends StatelessWidget {
-  const PickBall({super.key, required this.pick});
+  const PickBall({super.key, required this.pick, this.radius = 20});
 
   final int pick;
-
+  final double radius;
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
+      radius: radius,
       child: Stack(
         children: [
           Positioned.fill(

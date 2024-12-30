@@ -2,16 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sixpicker/mvvm/repository/sp_local.dart';
+import 'package:sixpicker/mvvm/view_model/vm_local.dart';
 import 'package:sixpicker/router/router.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
+  final preferences = await SharedPreferences.getInstance();
+  final shared = LocalSharedPreferences(preferences);
   runApp(
-    const ProviderScope(
-      observers: [],
-      child: SixPicker(),
+    ProviderScope(
+      overrides: [
+        vmLocal.overrideWith(()=> ViewModelLocal(shared)),
+      ],
+      child: const SixPicker(),
     ),
   );
 }

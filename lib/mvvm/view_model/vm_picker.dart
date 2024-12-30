@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:sixpicker/mvvm/model/m_picker.dart';
 import 'package:sixpicker/mvvm/view_model/vm_bill.dart';
 import 'package:sixpicker/mvvm/view_model/vm_local.dart';
+import 'package:sixpicker/screens/main/widget/w_pick_help.dart';
 
 class ViewModelPicker extends Notifier<ModelPicker> {
 
@@ -20,6 +21,11 @@ class ViewModelPicker extends Notifier<ModelPicker> {
 
   void setPickType(int? index) => state = ModelPicker(seed: state.seed,pickType: index??0, pickData: state.pickData,ymd: state.ymd);
 
+  void showHelp(BuildContext context) {
+    showDialog(context: context, builder: (context) => const PickHelp());
+    if(ref.read(vmLocal).isFirst) ref.read(vmLocal.notifier).setIsFirst();
+  }
+
   void setSeed(BuildContext context, {required String seed}) {
     ref.read(vmBill.notifier).setPage(0);
     FocusManager.instance.primaryFocus?.unfocus();
@@ -31,6 +37,10 @@ class ViewModelPicker extends Notifier<ModelPicker> {
     ref.read(vmBill.notifier).setPage(1);
     if(state.pickType == 0) {
       ref.read(vmLocal.notifier).showSnackbar(context, title: "Please choose the type");
+      return;
+    }
+    if(state.seed.isEmpty){
+      ref.read(vmLocal.notifier).showSnackbar(context, title: "Please set the code value");
       return;
     }
     List<int> numbers = List.generate(45, (index) => index + 1);

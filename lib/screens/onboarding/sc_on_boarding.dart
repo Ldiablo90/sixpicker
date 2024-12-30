@@ -5,6 +5,10 @@ import 'package:go_router/go_router.dart';
 import 'package:sixpicker/mvvm/view_model/vm_local.dart';
 import 'package:sixpicker/router/route_path.dart';
 import 'package:sixpicker/router/router.dart';
+import 'package:sixpicker/screens/public/widget/w_button_box.dart';
+import 'package:sixpicker/screens/public/widget/w_button_fit.dart';
+import 'package:sixpicker/screens/public/widget/w_button_fit.dart';
+import 'package:sixpicker/screens/public/widget/w_button_fit.dart';
 import 'package:sixpicker/screens/public/widget/w_scaffold.dart';
 
 
@@ -34,13 +38,25 @@ class _OnBoardingState extends ConsumerState<OnBoarding> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Spacer(flex: 10),
-                const Text("SixPicker",style: TextStyle(fontSize: 40,fontWeight: FontWeight.w900,shadows: [Shadow(blurRadius: 5,offset: Offset(1, 1),color: Colors.grey)])),
+                const Text("SixPicker",style: TextStyle(fontSize: 40,fontWeight: FontWeight.w900, shadows: [Shadow(blurRadius: 5,offset: Offset(1, 1),color: Colors.grey)])),
                 const Spacer(flex: 2),
-                ElevatedButton(onPressed: (){context.push(PathPicker.path);}, child: Text("Number Generation")),
+                Row(
+                  children: [
+                    ButtonFit(onTap: (){context.push(PathPicker.path);}, child: const ButtonBox("Number Generation")),
+                  ],
+                ),
                 const Spacer(flex: 1),
-                ElevatedButton(onPressed: (){context.push(PathBill.path);}, child: Text("lotto bill")),
+                Row(
+                  children: [
+                    ButtonFit(onTap: (){context.push(PathBill.path);}, child: const ButtonBox("lotto bill")),
+                  ],
+                ),
                 const Spacer(flex: 1),
-                ElevatedButton(onPressed: (){context.push(PathSetting.path);}, child: Text("setting")),
+                Row(
+                  children: [
+                    ButtonFit(onTap: (){context.push(PathSetting.path);}, child: const ButtonBox("setting")),
+                  ],
+                ),
                 const Spacer(flex: 10),
               ],
             ),

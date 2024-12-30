@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sixpicker/router/route_path.dart';
 import 'package:sixpicker/router/router.dart';
+import 'package:sixpicker/screens/public/widget/w_button_box.dart';
+import 'package:sixpicker/screens/public/widget/w_button_fit.dart';
 import 'package:sixpicker/screens/public/widget/w_scaffold.dart';
 
 class Setting extends StatelessWidget {
@@ -14,13 +16,10 @@ class Setting extends StatelessWidget {
         children: [
           Row(
             children: [
-              Expanded(child: GestureDetector(
+              ButtonFit(
                 onTap: (){context.pushNamed(PathOSSList.name);},
-                child: Container(
-                  decoration: const BoxDecoration(),
-                  child: const Center(child: Text("Oss List")),
-                ),
-              ))
+                child: const ButtonBox("Oss List"),
+              )
             ],
           )
         ],

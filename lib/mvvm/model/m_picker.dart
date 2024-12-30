@@ -3,5 +3,5 @@ class ModelPicker{
   final String seed;
   final int pickType;
   final List<List<int>> pickData;
-  ModelPicker({this.ymd = '',this.seed = '',this.pickType = 0, this.pickData = const []});
+  ModelPicker({this.ymd = '',this.seed = '',this.pickType = 1, this.pickData = const []});
 }
